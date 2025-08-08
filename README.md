@@ -98,6 +98,48 @@ FRONTEND_URL=http://localhost:8080
 - `npm run install:all` - Install dependencies for all workspaces
 - `npm run clean` - Clean all build artifacts and node_modules
 
+## 🌐 Deployment
+
+### Frontend (Vercel)
+The frontend is configured for Vercel deployment:
+
+1. **Connect your GitHub repository to Vercel**
+2. **Vercel will automatically detect the configuration** from `vercel.json`
+3. **Deploy with one click**
+
+### Backend (Railway/Render/Heroku)
+The backend needs to be deployed separately:
+
+1. **Deploy to Railway:**
+   ```bash
+   # Install Railway CLI
+   npm install -g @railway/cli
+   
+   # Login and deploy
+   railway login
+   railway init
+   railway up
+   ```
+
+2. **Deploy to Render:**
+   - Create a new Web Service
+   - Connect your GitHub repository
+   - Set build command: `cd backend && npm install`
+   - Set start command: `cd backend && npm start`
+   - Add environment variables
+
+3. **Update API endpoint:**
+   After deploying the backend, update the API endpoint in `frontend/vite.config.ts`:
+   ```typescript
+   proxy: {
+     '/api': {
+       target: 'https://your-backend-url.com',
+       changeOrigin: true,
+       rewrite: (path) => path.replace(/^\/api/, ''),
+     },
+   },
+   ```
+
 ## 🌐 Access Points
 
 - **Frontend**: http://localhost:8080 (or 8081 if 8080 is busy)
