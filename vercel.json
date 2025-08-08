@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm install",
+  "installCommand": "npm install && npm rebuild @swc/core",
   "buildCommand": "npm run build",
   "outputDirectory": "frontend/dist",
   "rewrites": [
