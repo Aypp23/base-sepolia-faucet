@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
     proxy: {
       '/api': {
         target: process.env.NODE_ENV === 'production' 
-          ? 'https://base-sepolia-faucet-backend.onrender.com'  // Update this with your actual Render URL
+          ? 'https://base-sepolia-faucet-backend.onrender.com'
           : 'http://localhost:3001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
