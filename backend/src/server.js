@@ -16,7 +16,17 @@ let db, recaptcha, ethereum;
 
 async function initializeServices() {
   try {
-    db = new FaucetDatabase(process.env.DB_PATH);
+    // Check required environment variables
+    const requiredEnvVars = ['RPC_URL', 'PRIVATE_KEY', 'RECAPTCHA_SECRET_KEY'];
+    const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+    
+    if (missingVars.length > 0) {
+      console.error('❌ Missing required environment variables:', missingVars.join(', '));
+      console.log('💡 Please set these variables in your Render environment settings');
+      process.exit(1);
+    }
+
+    db = new FaucetDatabase(process.env.DB_PATH || './faucet.db');
     await db.initDatabase();
     recaptcha = new RecaptchaVerifier(process.env.RECAPTCHA_SECRET_KEY);
     ethereum = new EthereumService(process.env.RPC_URL, process.env.PRIVATE_KEY);

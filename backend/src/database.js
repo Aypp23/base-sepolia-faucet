@@ -5,10 +5,9 @@ class FaucetDatabase {
   constructor(dbPath) {
     this.dbPath = dbPath;
     this.db = null;
-    this.initDatabase();
   }
 
-  initDatabase() {
+  async initDatabase() {
     return new Promise((resolve, reject) => {
       this.db = new sqlite3.Database(this.dbPath, (err) => {
         if (err) {

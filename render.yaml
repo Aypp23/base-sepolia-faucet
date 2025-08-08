@@ -11,11 +11,7 @@ services:
       - key: PORT
         value: 10000
       - key: RPC_URL
-        sync: false
-      - key: PRIVATE_KEY
-        sync: false
-      - key: RECAPTCHA_SECRET_KEY
-        sync: false
+        value: https://sepolia.base.org
       - key: FAUCET_AMOUNT
         value: 0.001
       - key: RATE_LIMIT_HOURS
