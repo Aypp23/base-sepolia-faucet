@@ -107,37 +107,73 @@ The frontend is configured for Vercel deployment:
 2. **Vercel will automatically detect the configuration** from `vercel.json`
 3. **Deploy with one click**
 
-### Backend (Railway/Render/Heroku)
-The backend needs to be deployed separately:
+### Backend (Render - Recommended)
 
-1. **Deploy to Railway:**
+The backend needs to be deployed separately. Render is recommended for its simplicity and free tier.
+
+#### **Option 1: Using render.yaml (Recommended)**
+
+1. **Push your code to GitHub** (already done)
+2. **Go to [Render Dashboard](https://dashboard.render.com/)**
+3. **Click "New +" → "Blueprint"**
+4. **Connect your GitHub repository**: `https://github.com/Aypp23/base-sepolia-faucet`
+5. **Render will automatically detect the `render.yaml` configuration**
+6. **Click "Apply" to deploy**
+
+#### **Option 2: Manual Deployment**
+
+1. **Go to [Render Dashboard](https://dashboard.render.com/)**
+2. **Click "New +" → "Web Service"**
+3. **Connect your GitHub repository**: `https://github.com/Aypp23/base-sepolia-faucet`
+4. **Configure the service:**
+   - **Name**: `base-sepolia-faucet-backend`
+   - **Environment**: `Node`
+   - **Build Command**: `cd backend && npm install`
+   - **Start Command**: `cd backend && npm start`
+   - **Plan**: `Free`
+
+5. **Add Environment Variables:**
+   ```
+   NODE_ENV=production
+   PORT=10000
+   RPC_URL=https://sepolia.base.org
+   PRIVATE_KEY=your_private_key_here
+   RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
+   FAUCET_AMOUNT=0.001
+   RATE_LIMIT_HOURS=24
+   DB_PATH=./faucet.db
+   ```
+
+6. **Click "Create Web Service"**
+
+#### **Update Frontend API Endpoint**
+
+After deploying the backend, update the API endpoint in `frontend/vite.config.ts`:
+
+```typescript
+proxy: {
+  '/api': {
+    target: 'https://your-render-service-name.onrender.com',
+    changeOrigin: true,
+    rewrite: (path) => path.replace(/^\/api/, ''),
+  },
+},
+```
+
+Replace `your-render-service-name` with your actual Render service name.
+
+#### **Alternative: Railway Deployment**
+
+1. **Install Railway CLI:**
    ```bash
-   # Install Railway CLI
    npm install -g @railway/cli
-   
-   # Login and deploy
+   ```
+
+2. **Login and deploy:**
+   ```bash
    railway login
    railway init
    railway up
-   ```
-
-2. **Deploy to Render:**
-   - Create a new Web Service
-   - Connect your GitHub repository
-   - Set build command: `cd backend && npm install`
-   - Set start command: `cd backend && npm start`
-   - Add environment variables
-
-3. **Update API endpoint:**
-   After deploying the backend, update the API endpoint in `frontend/vite.config.ts`:
-   ```typescript
-   proxy: {
-     '/api': {
-       target: 'https://your-backend-url.com',
-       changeOrigin: true,
-       rewrite: (path) => path.replace(/^\/api/, ''),
-     },
-   },
    ```
 
 ## 🌐 Access Points
